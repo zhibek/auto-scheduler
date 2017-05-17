@@ -15,6 +15,11 @@ class AutoScheduler
      */
     private $client;
 
+    public function __construct()
+    {
+        date_default_timezone_set(self::DEFAULT_TIMEZONE);
+    }
+
     /**
      * Returns an authorized API client.
      * @return Google_Client the authorized client object
@@ -65,6 +70,7 @@ class AutoScheduler
             'start' => $startTime,
             'end' => $endTime,
             'attendees' => $attendeesData,
+            'guestsCanModify' => true,
         ]);
 
         $service->events->insert(self::GOOGLE_CALENDAR_ID, $newEvent);
