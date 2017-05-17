@@ -1,0 +1,15 @@
+{
+    "name": "zhibek/auto-scheduler",
+    "description": "Auto Schedule Google Calender events based on config",
+    "license": "Apache-2.0",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "google/apiclient": "2.0"
+    },
+    "autoload": {
+        "psr-0": { 
+            "": "src"
+        }
+    }
+}
