@@ -26,6 +26,10 @@ class AutoScheduler
      */
     function getClient()
     {
+        if (!is_file(__DIR__ . self::GOOGLE_AUTH_CONFIG_PATH)) {
+            throw new Exception(sprintf('Google Auth Config required, but not found at "%s"', __DIR__ . self::GOOGLE_AUTH_CONFIG_PATH));
+        }
+
         if (!$this->client) {
             $this->client = new Google_Client();
             $this->client->setScopes(self::GOOGLE_CALENDAR_SCOPES);
