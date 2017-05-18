@@ -12,10 +12,14 @@ class AutoScheduler
 
     const EVENTS_PATH = '/../data/event-templates/*.yaml';
 
+    const STATE_PATH = '/../data/state.json';
+
     /**
      * @var Google_Client
      */
     private $client;
+
+    private $state;
 
     public function __construct()
     {
@@ -28,16 +32,37 @@ class AutoScheduler
      */
     private function getClient()
     {
-        if (!is_file(__DIR__ . self::GOOGLE_AUTH_CONFIG_PATH)) {
-            throw new Exception(sprintf('Google Auth Config required, but not found at "%s"', __DIR__ . self::GOOGLE_AUTH_CONFIG_PATH));
-        }
-
         if (!$this->client) {
+            if (!is_file(__DIR__ . self::GOOGLE_AUTH_CONFIG_PATH)) {
+                throw new Exception(sprintf('Google Auth Config required, but not found at "%s"', __DIR__ . self::GOOGLE_AUTH_CONFIG_PATH));
+            }
+
             $this->client = new Google_Client();
             $this->client->setScopes(self::GOOGLE_CALENDAR_SCOPES);
             $this->client->setAuthConfig(__DIR__ . self::GOOGLE_AUTH_CONFIG_PATH);
         }
         return $this->client;
+    }
+
+    private function getState()
+    {
+        if (!$this->state) {
+            if (is_file(__DIR__ . self::STATE_PATH)) {
+                $this->state = json_decode(file_get_contents(__DIR__ . self::STATE_PATH));
+            } else {
+                $this->state = (object)[];
+            }
+        }
+        return $this->state;
+    }
+
+    private function saveState()
+    {
+        $state = $this->getState();
+
+        file_put_contents(__DIR__ . self::STATE_PATH, json_encode($state));
+
+        return true;
     }
 
     public function createEvent($subject, $recipients, $times)
