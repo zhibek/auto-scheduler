@@ -24,7 +24,7 @@ class AutoScheduler
      * Returns an authorized API client.
      * @return Google_Client the authorized client object
      */
-    function getClient()
+    private function getClient()
     {
         if (!is_file(__DIR__ . self::GOOGLE_AUTH_CONFIG_PATH)) {
             throw new Exception(sprintf('Google Auth Config required, but not found at "%s"', __DIR__ . self::GOOGLE_AUTH_CONFIG_PATH));
@@ -38,7 +38,7 @@ class AutoScheduler
         return $this->client;
     }
 
-    function createEvent($name, $attendees, $times)
+    public function createEvent($name, $attendees, $times)
     {
         // Get the API client and construct the service object.
         $client = $this->getClient();
@@ -82,7 +82,7 @@ class AutoScheduler
         return true;
     }
 
-    function listEvents()
+    public function listEvents()
     {
         // Get the API client and construct the service object.
         $client = $this->getClient();
@@ -99,7 +99,7 @@ class AutoScheduler
         return $results->getItems();
     }
 
-    function flushEvents()
+    public function flushEvents()
     {
         // Get the API client and construct the service object.
         $client = $this->getClient();
@@ -113,5 +113,7 @@ class AutoScheduler
 
         return true;
     }
+
+
 
 }
