@@ -95,4 +95,19 @@ class AutoScheduler
         return $results->getItems();
     }
 
+    function flushEvents()
+    {
+        // Get the API client and construct the service object.
+        $client = $this->getClient();
+        $service = new Google_Service_Calendar($client);
+
+        $events = $this->listEvents();
+
+        foreach ($events as $event) {
+            $service->events->delete(self::GOOGLE_CALENDAR_ID, $event->id);
+        }
+
+        return true;
+    }
+
 }
