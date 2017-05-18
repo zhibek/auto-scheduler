@@ -10,6 +10,8 @@ class AutoScheduler
 
     const DEFAULT_TIMEZONE = 'Africa/Cairo';
 
+    const EVENTS_PATH = '/../data/event-templates/*.yaml';
+
     /**
      * @var Google_Client
      */
@@ -38,15 +40,15 @@ class AutoScheduler
         return $this->client;
     }
 
-    public function createEvent($name, $attendees, $times)
+    public function createEvent($subject, $recipients, $times)
     {
         // Get the API client and construct the service object.
         $client = $this->getClient();
         $service = new Google_Service_Calendar($client);
 
-        $attendeesData = [];
-        foreach ((array)$attendees as $attendee) {
-            $attendeesData[] = ['email' => $attendee];
+        $recipientsData = [];
+        foreach ((array)$recipients as $recipient) {
+            $recipientsData[] = ['email' => $recipient];
         }
 
         $startTime = null;
@@ -70,10 +72,10 @@ class AutoScheduler
 
         // Create event
         $newEvent = new Google_Service_Calendar_Event([
-            'summary' => $name,
+            'summary' => $subject,
             'start' => $startTime,
             'end' => $endTime,
-            'attendees' => $attendeesData,
+            'attendees' => $recipientsData,
             'guestsCanModify' => true,
         ]);
 
@@ -114,6 +116,15 @@ class AutoScheduler
         return true;
     }
 
+    public function fetchEventTemplates()
+    {
+        $eventTemplates = [];
 
+        foreach (glob(__DIR__ . self::EVENTS_PATH) as $eventTemplate) {
+            $eventTemplates[] = Symfony\Component\Yaml\Yaml::parse(file_get_contents($eventTemplate));
+        }
+
+        return $eventTemplates;
+    }
 
 }

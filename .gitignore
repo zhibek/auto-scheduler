@@ -1,5 +1,5 @@
 /vendor
 /data/auth/*
 !/data/auth/.gitkeep
-/data/events/*
-!/data/events/.gitkeep
+/data/event-templates/*
+!/data/event-templates/.gitkeep
